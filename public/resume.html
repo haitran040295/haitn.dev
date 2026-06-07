@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tran Ngoc Hai — Fullstack Engineer</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:     #111827;
+      --acc:     #1d4ed8;
+      --muted:   #6b7280;
+      --light:   #f1f5f9;
+      --rule:    #e2e8f0;
+      --sidebar: #f8fafc;
+      --f:       'IBM Plex Sans', sans-serif;
+    }
+
+    html { font-size: 16.5px; }
+
+    body {
+      font-family: var(--f);
+      background: #e8ecf0;
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    /* ── PAGE SHELL ── */
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 24px auto;
+      background: #fff;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      box-shadow: 0 8px 48px rgba(0,0,0,.14);
+    }
+
+    /* ── TOP HEADER ── */
+    .top-header {
+      background: var(--ink);
+      color: #fff;
+      padding: 20px 28px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+    }
+    .top-header h1 {
+      font-size: 1.7rem;
+      font-weight: 600;
+      letter-spacing: -.01em;
+      line-height: 1.1;
+    }
+    .top-header .role {
+      font-size: .82rem;
+      font-weight: 300;
+      color: #93c5fd;
+      margin-top: 3px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .contact-list {
+      list-style: none;
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .contact-list li {
+      font-size: .75rem;
+      font-weight: 300;
+      color: #cbd5e1;
+      letter-spacing: .02em;
+    }
+    .contact-list a { color: #93c5fd; text-decoration: none; }
+
+    /* ── BODY: 2 COLS ── */
+    .body {
+      display: grid;
+      grid-template-columns: 192px 1fr;
+      min-height: 0;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      background: var(--sidebar);
+      border-right: 1px solid var(--rule);
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* ── MAIN ── */
+    .main {
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ── SECTION TITLE ── */
+    .sec-title {
+      font-size: .62rem;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--acc);
+      border-bottom: 1.5px solid var(--acc);
+      padding-bottom: 3px;
+      margin-bottom: 8px;
+    }
+
+    /* ── SIDEBAR SKILLS ── */
+    .skill-group { margin-bottom: 8px; }
+    .skill-group:last-child { margin-bottom: 0; }
+    .skill-group-label {
+      font-size: .72rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .skill-group ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+    }
+    .skill-group ul li {
+      font-size: .68rem;
+      background: #dbeafe;
+      color: #1e40af;
+      border-radius: 3px;
+      padding: 1px 6px;
+      font-weight: 400;
+    }
+
+    /* ── EDUCATION (sidebar) ── */
+    .edu-block .deg {
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+    .edu-block .uni {
+      font-size: .72rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .edu-block .gpa {
+      display: inline-block;
+      margin-top: 4px;
+      font-size: .68rem;
+      font-weight: 600;
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--acc);
+    }
+
+    /* ── SUMMARY ── */
+    .summary p {
+      font-size: .79rem;
+      font-weight: 300;
+      color: #374151;
+      line-height: 1.65;
+    }
+
+    /* ── EXP ITEM ── */
+    .exp-item { margin-bottom: 14px; }
+    .exp-item:last-child { margin-bottom: 0; }
+
+    .exp-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px;
+      align-items: baseline;
+      margin-bottom: 1px;
+    }
+    .exp-title {
+      font-size: .84rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .exp-date {
+      font-size: .68rem;
+      font-weight: 400;
+      color: var(--muted);
+      font-family: 'IBM Plex Mono', monospace;
+      white-space: nowrap;
+    }
+    .exp-company {
+      font-size: .75rem;
+      font-weight: 500;
+      color: var(--acc);
+      margin-bottom: 4px;
+    }
+    .exp-company .loc {
+      font-weight: 300;
+      color: var(--muted);
+    }
+    .exp-bullets {
+      list-style: none;
+      padding: 0;
+    }
+    .exp-bullets li {
+      font-size: .76rem;
+      font-weight: 300;
+      color: #374151;
+      line-height: 1.55;
+      padding-left: 11px;
+      position: relative;
+      margin-bottom: 1px;
+    }
+    .exp-bullets li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--acc);
+      font-size: .6rem;
+      top: .2em;
+    }
+
+    /* ── PROJECT SUB-ITEMS ── */
+    .project-item { margin-top: 10px; }
+    .project-label {
+      font-size: .72rem;
+      font-weight: 500;
+      color: #374151;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 3px;
+    }
+    .project-label .proj-name {
+      color: var(--ink);
+      font-weight: 600;
+    }
+    .project-label .proj-date {
+      font-size: .66rem;
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--muted);
+      font-weight: 400;
+    }
+    .project-label::before {
+      content: '';
+      display: inline-block;
+      width: 2px;
+      height: 12px;
+      background: var(--acc);
+      border-radius: 2px;
+      opacity: .5;
+      flex-shrink: 0;
+    }
+
+    /* ── DIVIDER ── */
+    .exp-divider {
+      border: none;
+      border-top: 1px solid var(--rule);
+      margin: 9px 0;
+    }
+
+    /* ── PRINT ── */
+    @page {
+      size: A4;
+      margin: 0;
+    }
+    @page         { margin: 12mm 0; }
+    @page :first  { margin-top: 0; }
+
+    /* ── PAGE BREAK CONTROL ── */
+    @media print {
+      html { font-size: 15px; }
+      body { background: #fff; }
+      .page { width: 100%; margin: 0; box-shadow: none; min-height: 297mm; }
+      .body { padding-top: 0; }
+
+      /* Page 2+ top padding via pseudo element on main */
+      .main { padding-top: 20px; }
+
+      .top-header           { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .sidebar              { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .sec-title            { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .skill-group ul li    { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+      .exp-item             { break-inside: auto;  page-break-inside: auto;  }
+      .project-item         { break-inside: avoid; page-break-inside: avoid; }
+      .exp-divider          { break-after: avoid;  page-break-after: avoid;  }
+      .sec-title            { break-after: avoid;  page-break-after: avoid;  }
+      .exp-company          { break-after: avoid;  page-break-after: avoid;  }
+      .project-label        { break-after: avoid;  page-break-after: avoid;  }
+      .exp-bullets          { break-inside: avoid; page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- TOP HEADER -->
+  <div class="top-header">
+    <div>
+      <h1>Tran Ngoc Hai</h1>
+      <div class="role">Fullstack Engineer · 8+ Years Experience</div>
+    </div>
+    <ul class="contact-list">
+      <li>Vinh Long, Vietnam</li>
+      <li><a href="mailto:tngochai021995@gmail.com">tngochai021995@gmail.com</a></li>
+      <li>(84) 983338130</li>
+    </ul>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+      <!-- SKILLS -->
+      <div>
+        <div class="sec-title">Skills</div>
+
+        <div class="skill-group">
+          <div class="skill-group-label">Backend</div>
+          <ul>
+            <li>Java</li><li>Node.js</li><li>Next.js</li><li>PHP</li><li>Golang</li>
+          </ul>
+        </div>
+
+        <div class="skill-group">
+          <div class="skill-group-label">Frontend</div>
+          <ul>
+            <li>TypeScript</li><li>React</li><li>Next.js</li><li>Vue3</li><li>Tailwind</li><li>HTML/CSS</li>
+          </ul>
+        </div>
+
+        <div class="skill-group">
+          <div class="skill-group-label">Database</div>
+          <ul>
+            <li>PostgreSQL</li><li>MySQL</li><li>MongoDB</li><li>Firebase</li>
+          </ul>
+        </div>
+
+        <div class="skill-group">
+          <div class="skill-group-label">DevOps / Cloud</div>
+          <ul>
+            <li>Docker</li><li>Kubernetes</li><li>AWS</li><li>Azure</li><li>Linux</li><li>Windows Server</li>
+          </ul>
+        </div>
+
+        <div class="skill-group">
+          <div class="skill-group-label">CI/CD</div>
+          <ul>
+            <li>Jenkins</li><li>GitHub Actions</li><li>AWS CodePipeline</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- EDUCATION -->
+      <div>
+        <div class="sec-title">Education</div>
+        <div class="edu-block">
+          <div class="deg">Bachelor of Software Engineering</div>
+          <div class="uni">Can Tho University<br/>Can Tho, Vietnam · 2017</div>
+          <div class="gpa">GPA 3.12</div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+      <!-- SUMMARY -->
+      <section>
+        <div class="sec-title">Summary</div>
+        <p>Fullstack Engineer with 8+ years of experience building web and mobile products across the full development lifecycle. I work primarily with React, React Native, Next.js, Node.js, PHP, and Golang, and I take pride in writing code that's clean, maintainable, and easy for the next engineer to work with. I've led small teams, built products from the ground up, and stepped into existing codebases to improve and stabilize them. My sweet spot is where product thinking meets solid engineering.</p>
+      </section>
+
+      <!-- EXPERIENCE -->
+      <section>
+        <div class="sec-title">Experience</div>
+
+        <div class="exp-item">
+          <div class="exp-row">
+            <div class="exp-title">Fullstack Engineer</div>
+            <div class="exp-date">Jul 2025 – Present</div>
+          </div>
+          <div class="exp-company">Bracster <span class="loc">· US (Remote)</span></div>
+
+          <div class="project-item">
+            <div class="project-label">
+              <span class="proj-name">ODAAT Habit Tracker</span>
+              <span class="proj-date">iOS App Store · Side Project</span>
+            </div>
+            <ul class="exp-bullets">
+              <li>Sole developer of a React Native habit-tracking app published on the iOS App Store, covering full lifecycle from design to release.</li>
+              <li>Built core features including custom habit creation, sobriety tracking, streak system, milestone badges, and focused progress views.</li>
+              <li>Implemented in-app subscription with auto-renewing plans via Apple In-App Purchase.</li>
+            </ul>
+          </div>
+
+          <div class="project-item">
+            <div class="project-label">
+              <span class="proj-name">Landing Page Service</span>
+              <span class="proj-date">Multi-client</span>
+            </div>
+            <ul class="exp-bullets">
+              <li>Implemented and deployed marketing landing pages for multiple clients, integrated with ad campaigns (Google, Meta).</li>
+              <li>Managed server infrastructure for hosting and deploying pages across client accounts.</li>
+              <li>Set up analytics and conversion tracking pipelines for campaign performance monitoring.</li>
+            </ul>
+          </div>
+
+          <div class="project-item">
+            <div class="project-label">
+              <span class="proj-name">ReallyVote (reallyvote.com)</span>
+              <span class="proj-date">Maintenance & Feature Dev</span>
+            </div>
+            <ul class="exp-bullets">
+              <li>Maintained and improved a US voter information web app helping users find legislators, ballot candidates, and election results by precinct.</li>
+              <li>Implemented SMS and email notification features for seat-change and election timer alerts.</li>
+              <li>Revamped subscription pricing model (Free / State $9/mo / National $99/mo) and migrated server infrastructure.</li>
+              <li>Investigated and resolved bugs to ensure platform stability across the 2.x release cycle.</li>
+            </ul>
+          </div>
+        </div>
+
+        <hr class="exp-divider"/>
+
+        <div class="exp-item">
+          <div class="exp-row">
+            <div class="exp-title">Fullstack Engineer</div>
+            <div class="exp-date">Jan 2025 – Jul 2025</div>
+          </div>
+          <div class="exp-company">Transore <span class="loc">· HCM, Vietnam (Remote)</span></div>
+          <ul class="exp-bullets">
+            <li>Rewrote storefront API in Golang, reducing loading time by ~30%.</li>
+            <li>Developed market insight and redirect features; migrated platform for new Shopify market changes.</li>
+          </ul>
+        </div>
+
+        <hr class="exp-divider"/>
+
+        <div class="exp-item">
+          <div class="exp-row">
+            <div class="exp-title">Fullstack Engineer</div>
+            <div class="exp-date">Sep 2020 – Jan 2025</div>
+          </div>
+          <div class="exp-company">Remolution <span class="loc">· Can Tho, Vietnam</span></div>
+
+          <div class="project-item">
+            <div class="project-label">
+              <span class="proj-name">Salested CRM (salested.com)</span>
+              <span class="proj-date">Jan 2023 – Jan 2025</span>
+            </div>
+            <ul class="exp-bullets">
+              <li>Built full-stack CRM platform using Next.js, React Native, Supabase, GCE, Segment, and Sentry.</li>
+              <li>Integrated Gmail and Facebook APIs for unified email/message management; shipped companion mobile app in React Native.</li>
+              <li>Delivered features on schedule within a 5-member cross-functional team.</li>
+            </ul>
+          </div>
+
+          <div class="project-item">
+            <div class="project-label">
+              <span class="proj-name">Kaizen Sport · Eligibility Wizard</span>
+              <span class="proj-date">Oct 2021 – Dec 2022</span>
+            </div>
+            <ul class="exp-bullets">
+              <li>Led 4-dev team to build youth athlete eligibility management app; re-architected with Next.js + TailwindCSS.</li>
+              <li>Built charting feature with PDF export, cutting data analysis time by 30%.</li>
+              <li>Designed email/SMS notification system (React + Node.js) reducing manual NCAA updates by 50%.</li>
+            </ul>
+          </div>
+
+          <div class="project-item">
+            <div class="project-label">
+              <span class="proj-name">Wizzer Training</span>
+              <span class="proj-date">Sep 2020 – Sep 2021</span>
+            </div>
+            <ul class="exp-bullets">
+              <li>Built high-performance training course website (React + Node.js) with a 10+ member team.</li>
+              <li>Cut web app boot time by 80% via asset optimization, lazy loading, and code-splitting.</li>
+              <li>Automated training reminders via GCP; reduced mobile load time by 30% through component optimization.</li>
+            </ul>
+          </div>
+        </div>
+
+        <hr class="exp-divider"/>
+
+        <div class="exp-item">
+          <div class="exp-row">
+            <div class="exp-title">Fullstack Engineer</div>
+            <div class="exp-date">Mar 2017 – Aug 2020</div>
+          </div>
+          <div class="exp-company">TMA Solutions <span class="loc">· Ho Chi Minh City, Vietnam</span></div>
+          <ul class="exp-bullets">
+            <li>Developed SPA for network infrastructure management and reporting.</li>
+            <li>Created Nashorn (Java 8) plugins for network infrastructure management.</li>
+            <li>Built reusable web component framework using AngularJS and jQuery.</li>
+          </ul>
+        </div>
+
+      </section>
+    </main>
+  </div><!-- /body -->
+
+</div><!-- /page -->
+</body>
+</html>

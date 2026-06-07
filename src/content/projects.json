@@ -1,0 +1,90 @@
+[
+  {
+    "id": "tenantly",
+    "title": "Tenantly",
+    "summary": "Multi-tenant website builder I'm building on Laravel for a US company.",
+    "problem": "Small businesses want their own sites without touching code, and the company needed to run thousands of them from one codebase.",
+    "approach": "Building the multi-tenant Laravel backend — tenant isolation, billing, a Vue editor — with a publishing pipeline that pushes sites to the edge on Cloudflare. I picked Laravel because the team already knew it; a faster stack nobody could maintain wasn't worth it.",
+    "result": "Runs ~1,200 tenant sites today, and a new site goes live in under 30 seconds.",
+    "stack": ["Laravel", "PHP", "Vue", "Tailwind", "Cloudflare"],
+    "liveUrl": "",
+    "repoUrl": ""
+  },
+  {
+    "id": "steady",
+    "title": "Steady — Habit Tracker",
+    "summary": "Solo-built React Native habit and sobriety tracker, live on the iOS App Store.",
+    "problem": "I wanted a habit and sobriety tracker that didn't feel like a to-do list. So I built one.",
+    "approach": "Designed and built the whole app solo: habit creation, streak logic, milestone badges, and auto-renewing subscriptions through Apple In-App Purchase.",
+    "result": "On the App Store with ~4,000 downloads and a paying subscriber base, all built and shipped by me.",
+    "stack": ["React Native", "iOS", "Apple In-App Purchase"],
+    "liveUrl": "",
+    "repoUrl": ""
+  },
+  {
+    "id": "precinct",
+    "title": "Precinct",
+    "summary": "US voter-information platform for finding legislators, candidates, and results by precinct.",
+    "problem": "Voters can't easily find precinct-level information on legislators, ballot candidates, and election results in one place.",
+    "approach": "Maintained and extended the platform through its 2.x cycle — added SMS and email alerts for seat changes and election timers, and rebuilt the subscription tiers.",
+    "result": "Shipped a three-tier model (Free / State $9/mo / National $99/mo), migrated the infrastructure, and cleared the stability bugs across the release cycle.",
+    "stack": ["Web", "SMS/Email notifications", "Subscriptions"],
+    "liveUrl": "",
+    "repoUrl": ""
+  },
+  {
+    "id": "threadline",
+    "title": "Threadline CRM",
+    "summary": "Full-stack CRM with unified email and social messaging plus a companion mobile app.",
+    "problem": "Sales teams need email and social messages in one CRM, on web and on mobile.",
+    "approach": "Built it on Next.js, Supabase, and GCE; wired up Gmail and Facebook APIs for unified messaging; shipped a React Native companion app; instrumented with Segment and Sentry.",
+    "result": "Delivered the messaging and mobile features in a five-person cross-functional team.",
+    "stack": ["Next.js", "React Native", "Supabase", "GCE", "Segment", "Sentry"],
+    "liveUrl": "",
+    "repoUrl": ""
+  },
+  {
+    "id": "kaizen",
+    "title": "Kaizen Sport — Eligibility Wizard",
+    "summary": "Youth-athlete eligibility tool with reporting and automated NCAA updates.",
+    "problem": "Managing youth-athlete eligibility and NCAA status meant heavy manual analysis and updates.",
+    "approach": "Led a four-dev team to re-architect the app on Next.js and Tailwind, built charting with PDF export, and added a React/Node email and SMS notification system.",
+    "result": "Cut data-analysis time by 30% and manual NCAA updates by 50%.",
+    "stack": ["Next.js", "TailwindCSS", "React", "Node.js"],
+    "liveUrl": "",
+    "repoUrl": ""
+  },
+  {
+    "id": "wizzer",
+    "title": "Wizzer Training",
+    "summary": "Training-course site rebuilt for speed with a 10-plus-person team.",
+    "problem": "A content-heavy training site was loading too slowly on web and on mobile.",
+    "approach": "Built it on React and Node.js with asset optimization, lazy loading, and code-splitting, and automated training reminders through GCP.",
+    "result": "Cut web boot time by 80% and mobile load time by 30%.",
+    "stack": ["React", "Node.js", "GCP"],
+    "liveUrl": "",
+    "repoUrl": ""
+  },
+  {
+    "id": "transore",
+    "title": "Transore Storefront",
+    "summary": "Go storefront API rewrite for a Shopify-based platform.",
+    "problem": "The storefront API was slow and had to keep up with Shopify market changes.",
+    "approach": "Rewrote the storefront API in Go, built market-insight and redirect features, and migrated the platform onto new Shopify markets.",
+    "result": "Cut loading time by about 30%.",
+    "stack": ["Go", "Shopify"],
+    "liveUrl": "",
+    "repoUrl": ""
+  },
+  {
+    "id": "landing-pages",
+    "title": "Landing Page Service",
+    "summary": "Conversion-focused landing pages wired to ad campaigns and analytics for multiple clients.",
+    "problem": "Clients running Google and Meta ads needed fast landing pages plus the hosting and tracking to measure them.",
+    "approach": "Built and deployed landing pages across client accounts, ran the hosting and server infrastructure, and set up analytics and conversion-tracking pipelines.",
+    "result": "Shipped 20-plus campaign pages across multiple clients with end-to-end hosting and conversion tracking.",
+    "stack": ["HTML/CSS", "Google Ads", "Meta Ads", "Analytics"],
+    "liveUrl": "",
+    "repoUrl": ""
+  }
+]

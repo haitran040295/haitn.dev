@@ -1,0 +1,76 @@
+---
+import SectionHeading from './SectionHeading.astro';
+
+const services = [
+  {
+    title: 'Ship a new product',
+    body: "Empty repo to something real users can pay for. I've taken an app to the App Store solo, so I know which corners are safe to cut early and which ones page you later.",
+  },
+  {
+    title: 'Rescue an inherited codebase',
+    body: 'Slow, fragile, the code nobody wants to touch. I stabilize it, add the tests and instrumentation it never had, and make it safe to ship again.',
+  },
+  {
+    title: 'Add AI to a product',
+    body: 'Wiring LLM and other APIs into features that hold up, with fallbacks for when the API is slow, down, or just wrong. The demo is easy. The reliability is the job.',
+  },
+];
+---
+
+<section id="services" aria-labelledby="services-heading" class="py-16">
+  <div class="mx-auto max-w-content px-4 sm:px-8">
+    <SectionHeading
+      id="services-heading"
+      eyebrow="HOW I CAN HELP"
+      title="Three ways I get pulled in"
+      lead="Most work I take on looks like one of these."
+    />
+
+    <div class="mt-12 grid grid-cols-1 cards:grid-cols-3 gap-6">
+      {
+        services.map((s) => (
+          <article class="service-card flex flex-col gap-3 p-6 rounded-lg bg-surface border border-subtle" data-spotlight>
+            <h3 class="text-h4 font-display text-primary">{s.title}</h3>
+            <p class="text-body text-secondary">{s.body}</p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Spotlight cards, matching Work: cursor-tracked glow + accent border + lift.
+     The --mx/--my glow position is set in BaseLayout's pointer handler. */
+  .service-card {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    transition:
+      transform 200ms ease,
+      border-color 200ms ease;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: radial-gradient(
+      420px circle at var(--mx, 50%) var(--my, 50%),
+      color-mix(in srgb, var(--color-accent-default) 18%, transparent),
+      transparent 60%
+    );
+    opacity: 0;
+    transition: opacity 250ms ease;
+  }
+  @media (hover: hover) {
+    .service-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--color-accent-default);
+    }
+    .service-card:hover::before {
+      opacity: 1;
+    }
+  }
+</style>

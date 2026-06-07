@@ -1,0 +1,47 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import TechTag from './TechTag.astro';
+
+// Real stack only — grouped to show range, not a single "main" specialty.
+const groups = [
+  { label: 'Backend', items: ['Node.js', 'Go', 'PHP / Laravel', 'REST APIs'] },
+  { label: 'Frontend', items: ['TypeScript', 'React / Next.js', 'Vue', 'Tailwind', 'Astro'] },
+  { label: 'Mobile', items: ['React Native', 'iOS · App Store', 'In-App Purchase'] },
+  { label: 'Cloud & tooling', items: ['Cloudflare', 'DigitalOcean', 'GCP', 'Supabase', 'Sentry', 'Segment', 'AI APIs'] },
+];
+
+// Running index across every tag so they cascade in as one sequence.
+let tagIndex = 0;
+const groupsIndexed = groups.map((group) => ({
+  label: group.label,
+  items: group.items.map((label) => ({ label, i: tagIndex++ })),
+}));
+---
+
+<section id="skills" aria-labelledby="skills-heading" class="py-16">
+  <div class="mx-auto max-w-content px-4 sm:px-8">
+    <SectionHeading
+      id="skills-heading"
+      eyebrow="TOOLKIT"
+      title="What I build with"
+      lead="Tools I've shipped real things with across eight years. Not a wishlist."
+    />
+
+    <div class="mt-12 grid grid-cols-1 cards:grid-cols-2 gap-12">
+      {
+        groupsIndexed.map((group) => (
+          <div class="flex flex-col gap-4">
+            <h3 class="text-eyebrow font-mono uppercase text-secondary">{group.label}</h3>
+            <ul class="flex flex-wrap gap-2" aria-label={group.label}>
+              {group.items.map((item) => (
+                <li class="skill-tag" style={`animation-delay: ${item.i * 35}ms`}>
+                  <TechTag label={item.label} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

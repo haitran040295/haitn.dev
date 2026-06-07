@@ -1,0 +1,146 @@
+---
+// Faux terminal for the hero. Commands type themselves out, outputs follow.
+// Decorative (aria-hidden) — the same facts live in the hero copy + JSON-LD.
+// Reduced-motion / no-JS: renders the finished terminal, statically.
+const lines = [
+  { cmd: 'whoami', out: 'Tran Ngoc Hai — fullstack engineer' },
+  { cmd: 'cat stack.txt', out: 'Laravel · Vue · React Native · Go' },
+  { cmd: 'current', out: 'building a multi-tenant SaaS platform' },
+  { cmd: 'status', out: 'open to senior roles', led: true },
+];
+---
+
+<div class="terminal rounded-lg border border-subtle bg-surface overflow-hidden" data-terminal aria-hidden="true">
+  <div class="terminal-bar flex items-center gap-3 px-4 py-3 border-b border-subtle">
+    <span class="terminal-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="terminal-title font-mono text-body-sm text-tertiary">hai@portfolio — zsh</span>
+  </div>
+
+  <div class="terminal-body font-mono text-body-sm p-6 flex flex-col gap-4">
+    {
+      lines.map((l) => (
+        <div class="term-row">
+          <div class="term-cmd-line">
+            <span class="term-prompt">$</span>
+            <span class="term-cmd" data-cmd>{l.cmd}</span>
+          </div>
+          <div class="term-out" data-out>
+            {l.led && <span class="term-led" aria-hidden="true" />}
+            {l.out}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  const term = document.querySelector<HTMLElement>('[data-terminal]');
+  if (term) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const rows = Array.from(term.querySelectorAll<HTMLElement>('.term-row'));
+
+    if (!reduce && rows.length) {
+      const seq = rows.map((row) => {
+        const cmdEl = row.querySelector<HTMLElement>('[data-cmd]')!;
+        const outEl = row.querySelector<HTMLElement>('[data-out]')!;
+        const text = cmdEl.textContent ?? '';
+        cmdEl.textContent = '';
+        outEl.style.opacity = '0';
+        return { row, cmdEl, outEl, text };
+      });
+
+      let i = 0;
+      const typeCmd = () => {
+        if (i >= seq.length) {
+          term.dataset.done = 'true';
+          return;
+        }
+        if (i > 0) seq[i - 1].row.dataset.typing = 'done';
+        const { row, cmdEl, outEl, text } = seq[i];
+        row.dataset.typing = 'active';
+
+        let c = 0;
+        const tick = () => {
+          cmdEl.textContent = text.slice(0, c);
+          c += 1;
+          if (c <= text.length) {
+            setTimeout(tick, 38 + Math.random() * 55);
+          } else {
+            row.dataset.typing = 'cmd-done';
+            setTimeout(() => {
+              outEl.style.opacity = '1';
+              i += 1;
+              setTimeout(typeCmd, 360);
+            }, 160);
+          }
+        };
+        tick();
+      };
+
+      setTimeout(typeCmd, 600);
+    }
+  }
+</script>
+
+<style>
+  .terminal {
+    width: 100%;
+    /* soft accent glow to lift the window off the canvas */
+    box-shadow: 0 24px 70px -30px color-mix(in srgb, var(--color-accent-default) 50%, transparent);
+  }
+  .terminal-dots {
+    display: inline-flex;
+    gap: 0.4rem;
+  }
+  .terminal-dots i {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 9999px;
+    background-color: var(--color-border-default);
+  }
+
+  .term-prompt {
+    color: var(--color-accent-text);
+    margin-right: 0.5rem;
+  }
+  .term-cmd {
+    color: var(--color-text-primary);
+  }
+  .term-out {
+    color: var(--color-text-secondary);
+    margin-top: 0.2rem;
+  }
+  .term-led {
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background-color: var(--color-status-online);
+    margin-right: 0.45rem;
+    vertical-align: middle;
+  }
+
+  /* blinking caret on the line currently typing (and the final resting line) */
+  .term-row[data-typing='active'] .term-cmd::after,
+  .term-row[data-typing='cmd-done'] .term-cmd::after {
+    content: '';
+    display: inline-block;
+    width: 0.5rem;
+    height: 1em;
+    margin-left: 0.15rem;
+    vertical-align: -0.15em;
+    background-color: var(--color-accent-text);
+    animation: term-blink 1s steps(1) infinite;
+  }
+  @keyframes term-blink {
+    0%,
+    50% {
+      opacity: 1;
+    }
+    50.01%,
+    100% {
+      opacity: 0;
+    }
+  }
+</style>

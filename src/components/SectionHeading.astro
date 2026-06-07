@@ -1,0 +1,16 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  lead?: string;
+  /** id applied to the <h2> so a parent <section> can aria-labelledby it. */
+  id?: string;
+}
+const { eyebrow, title, lead, id } = Astro.props;
+---
+
+<div class="max-w-measure">
+  <p class="text-eyebrow font-mono uppercase text-accent">{eyebrow}</p>
+  <h2 id={id} class="text-h2 font-display text-primary mt-3">{title}</h2>
+  {lead && <p class="text-body-lg text-secondary mt-4">{lead}</p>}
+</div>

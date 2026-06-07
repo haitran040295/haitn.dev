@@ -1,0 +1,229 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// ── TOKEN VERIFICATION PAGE ──────────────────────────────────────────────────
+// Not a real section — a visual harness to confirm every token resolves and
+// every utility generates, in both themes (use the top-right toggle). Real
+// sections (Hero, Work, About, Skills, Contact, Footer) come next.
+
+// Semantic tokens (theme-aware). Rendered as filled swatches via the CSS var so
+// they re-theme live on toggle.
+const surfaces = [
+  { util: 'bg-canvas', var: '--color-bg-canvas' },
+  { util: 'bg-surface', var: '--color-bg-surface' },
+  { util: 'bg-elevated', var: '--color-bg-elevated' },
+  { util: 'bg-muted', var: '--color-bg-muted' },
+];
+const textTokens = [
+  { util: 'text-primary', var: '--color-text-primary' },
+  { util: 'text-secondary', var: '--color-text-secondary' },
+  { util: 'text-tertiary', var: '--color-text-tertiary' },
+  { util: 'text-on-accent', var: '--color-text-on-accent' },
+];
+const borderTokens = [
+  { util: 'border-subtle', var: '--color-border-subtle' },
+  { util: 'border-default', var: '--color-border-default' },
+];
+const accentTokens = [
+  { util: 'border-accent', var: '--color-accent-default' },
+  { util: '(hover)', var: '--color-accent-hover' },
+  { util: 'bg-accent', var: '--color-accent-solid' },
+  { util: 'text-accent', var: '--color-accent-text' },
+  { util: 'bg-accent-muted', var: '--color-accent-muted' },
+];
+
+// Primitive ramps — literal class strings so the scanner emits each utility.
+const grayRamp = [
+  ['50', 'bg-gray-50'], ['100', 'bg-gray-100'], ['200', 'bg-gray-200'],
+  ['300', 'bg-gray-300'], ['400', 'bg-gray-400'], ['500', 'bg-gray-500'],
+  ['600', 'bg-gray-600'], ['700', 'bg-gray-700'], ['800', 'bg-gray-800'],
+  ['900', 'bg-gray-900'], ['950', 'bg-gray-950'],
+];
+const accentRamp = [
+  ['50', 'bg-accent-50'], ['100', 'bg-accent-100'], ['200', 'bg-accent-200'],
+  ['300', 'bg-accent-300'], ['400', 'bg-accent-400'], ['500', 'bg-accent-500'],
+  ['600', 'bg-accent-600'], ['700', 'bg-accent-700'], ['800', 'bg-accent-800'],
+  ['900', 'bg-accent-900'], ['950', 'bg-accent-950'],
+];
+
+// Spacing scale — each `w-*` is a literal so it's generated.
+const spacing = [
+  { step: '0', px: '0px', w: 'w-0' },
+  { step: '1', px: '4px', w: 'w-1' },
+  { step: '2', px: '8px', w: 'w-2' },
+  { step: '3', px: '12px', w: 'w-3' },
+  { step: '4', px: '16px', w: 'w-4' },
+  { step: '6', px: '24px', w: 'w-6' },
+  { step: '8', px: '32px', w: 'w-8' },
+  { step: '12', px: '48px', w: 'w-12' },
+  { step: '16', px: '64px', w: 'w-16' },
+  { step: '24', px: '96px', w: 'w-24' },
+  { step: '32', px: '128px', w: 'w-32' },
+];
+
+const radii = [
+  { name: 'sm', px: '4px', cls: 'rounded-sm' },
+  { name: 'md', px: '8px', cls: 'rounded-md' },
+  { name: 'lg', px: '12px', cls: 'rounded-lg' },
+  { name: 'xl', px: '20px', cls: 'rounded-xl' },
+  { name: 'full', px: '9999px', cls: 'rounded-full' },
+];
+
+const type = [
+  { name: 'display', cls: 'text-display', font: 'font-display' },
+  { name: 'h1', cls: 'text-h1', font: 'font-display' },
+  { name: 'h2', cls: 'text-h2', font: 'font-display' },
+  { name: 'h3', cls: 'text-h3', font: 'font-display' },
+  { name: 'h4', cls: 'text-h4', font: 'font-display' },
+  { name: 'body-lg', cls: 'text-body-lg', font: 'font-body' },
+  { name: 'body', cls: 'text-body', font: 'font-body' },
+  { name: 'body-sm', cls: 'text-body-sm', font: 'font-body' },
+];
+
+const fonts = [
+  { label: 'font-display — Space Grotesk', cls: 'font-display' },
+  { label: 'font-body — Inter', cls: 'font-body' },
+  { label: 'font-mono — IBM Plex Mono', cls: 'font-mono' },
+];
+---
+
+<BaseLayout title="Design tokens" description="Design-token verification harness." noindex>
+  <main class="mx-auto max-w-5xl px-4 py-16">
+    <header class="mb-12">
+      <p class="text-eyebrow font-mono uppercase text-accent">Design tokens</p>
+      <h1 class="text-h1 font-display text-primary">Token system check</h1>
+      <p class="mt-3 text-body-lg text-secondary">
+        Every semantic color, the gray + accent ramps, the spacing scale, radii,
+        and the type scale. Toggle the theme (top-right) to verify both modes.
+      </p>
+    </header>
+
+    <!-- Semantic colors -->
+    <section class="mb-12 rounded-lg border border-subtle bg-surface p-8">
+      <h2 class="text-h3 font-display text-primary mb-6">Semantic colors</h2>
+
+      {[
+        { title: 'Surfaces', items: surfaces },
+        { title: 'Text', items: textTokens },
+        { title: 'Borders', items: borderTokens },
+        { title: 'Accent', items: accentTokens },
+      ].map((group) => (
+        <div class="mb-6">
+          <p class="text-eyebrow font-mono uppercase text-tertiary mb-3">{group.title}</p>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {group.items.map((t) => (
+              <div>
+                <div
+                  class="h-16 rounded-md border border-subtle"
+                  style={`background-color: var(${t.var})`}
+                ></div>
+                <p class="mt-2 text-body-sm font-mono text-secondary">{t.util}</p>
+                <p class="text-body-sm font-mono text-tertiary">{t.var}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </section>
+
+    <!-- Primitive ramps -->
+    <section class="mb-12 rounded-lg border border-subtle bg-surface p-8">
+      <h2 class="text-h3 font-display text-primary mb-6">Primitive ramps</h2>
+
+      <p class="text-eyebrow font-mono uppercase text-tertiary mb-3">gray</p>
+      <div class="grid grid-cols-4 sm:grid-cols-11 gap-2 mb-6">
+        {grayRamp.map(([shade, cls]) => (
+          <div>
+            <div class={`h-12 rounded-md border border-subtle ${cls}`}></div>
+            <p class="mt-2 text-body-sm font-mono text-tertiary">{shade}</p>
+          </div>
+        ))}
+      </div>
+
+      <p class="text-eyebrow font-mono uppercase text-tertiary mb-3">accent</p>
+      <div class="grid grid-cols-4 sm:grid-cols-11 gap-2">
+        {accentRamp.map(([shade, cls]) => (
+          <div>
+            <div class={`h-12 rounded-md border border-subtle ${cls}`}></div>
+            <p class="mt-2 text-body-sm font-mono text-tertiary">{shade}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Spacing -->
+    <section class="mb-12 rounded-lg border border-subtle bg-surface p-8">
+      <h2 class="text-h3 font-display text-primary mb-6">Spacing scale (8pt)</h2>
+      <div class="flex flex-col gap-3">
+        {spacing.map((s) => (
+          <div class="flex items-center gap-4">
+            <span class="text-body-sm font-mono text-tertiary w-16">{s.step} · {s.px}</span>
+            <div class={`h-4 rounded-sm bg-accent ${s.w}`}></div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Radii -->
+    <section class="mb-12 rounded-lg border border-subtle bg-surface p-8">
+      <h2 class="text-h3 font-display text-primary mb-6">Border radius</h2>
+      <div class="flex flex-wrap gap-6">
+        {radii.map((r) => (
+          <div>
+            <div class={`h-16 w-16 bg-accent-muted border border-accent ${r.cls}`}></div>
+            <p class="mt-2 text-body-sm font-mono text-tertiary">{r.name} · {r.px}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Type scale -->
+    <section class="mb-12 rounded-lg border border-subtle bg-surface p-8">
+      <h2 class="text-h3 font-display text-primary mb-6">Type scale</h2>
+      <div class="flex flex-col gap-6">
+        {type.map((t) => (
+          <div>
+            <p class="text-body-sm font-mono text-tertiary mb-2">{t.cls}</p>
+            <p class={`${t.cls} ${t.font} text-primary`}>Ship real products end-to-end</p>
+          </div>
+        ))}
+        <div>
+          <p class="text-body-sm font-mono text-tertiary mb-2">text-eyebrow (mono, uppercase)</p>
+          <p class="text-eyebrow font-mono uppercase text-accent">Selected work · 2025</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Font families -->
+    <section class="mb-12 rounded-lg border border-subtle bg-surface p-8">
+      <h2 class="text-h3 font-display text-primary mb-6">Font families</h2>
+      <div class="flex flex-col gap-6">
+        {fonts.map((f) => (
+          <div>
+            <p class="text-body-sm font-mono text-tertiary mb-2">{f.label}</p>
+            <p class={`${f.cls} text-h3 text-primary`}>The quick brown fox jumps — 0123456789</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Tokens in context -->
+    <section class="rounded-lg border border-subtle bg-surface p-8">
+      <h2 class="text-h3 font-display text-primary mb-6">Tokens in context</h2>
+      <div class="rounded-lg border border-subtle bg-elevated p-6">
+        <p class="text-eyebrow font-mono uppercase text-accent mb-2">Selected work</p>
+        <h3 class="text-h3 font-display text-primary mb-2">Project card preview</h3>
+        <p class="text-body text-secondary mb-6">
+          A one-line summary in secondary text, with a
+          <a href="#top" class="text-accent">link styled with text-accent</a> inline.
+        </p>
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="bg-accent text-on-accent text-body-sm rounded-md px-4 py-2">Primary CTA</span>
+          <span class="border border-default text-secondary text-body-sm rounded-md px-4 py-2">Secondary</span>
+          <span class="bg-muted text-secondary text-body-sm font-mono rounded-full px-3 py-1">TypeScript</span>
+          <span class="bg-muted text-secondary text-body-sm font-mono rounded-full px-3 py-1">Astro</span>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

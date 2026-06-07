@@ -1,0 +1,102 @@
+---
+import SectionHeading from './SectionHeading.astro';
+
+const faqs = [
+  {
+    q: 'Where are you based?',
+    a: 'Vietnam, GMT+7. I work remotely with teams across US and EU hours.',
+  },
+  {
+    q: 'Are you available?',
+    a: 'Open to senior fullstack roles, contract or full-time. I reply within a day.',
+  },
+  {
+    q: 'How do you work?',
+    a: 'Remote and async-friendly. Happy owning a feature end-to-end or joining an existing team.',
+  },
+  {
+    q: 'What about English?',
+    a: "Vietnamese is native, English is fluent. Not native, but it's never been the bottleneck.",
+  },
+];
+---
+
+<section id="faq" aria-labelledby="faq-heading" class="py-16">
+  <div class="mx-auto max-w-narrow px-4 sm:px-8">
+    <SectionHeading
+      id="faq-heading"
+      eyebrow="GOOD TO KNOW"
+      title="The practical stuff"
+      lead="What recruiters and clients usually ask first."
+    />
+
+    <div class="mt-12">
+      {
+        faqs.map((item, i) => (
+          <details class="faq-item" open={i === 0}>
+            <summary class="faq-q">
+              <span class="text-h4 font-display text-primary">{item.q}</span>
+              <span class="faq-icon" aria-hidden="true">+</span>
+            </summary>
+            <div class="faq-answer-wrap">
+              <p class="faq-answer text-body text-secondary">{item.a}</p>
+            </div>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-item {
+    border-top: 1px solid var(--color-border-subtle);
+  }
+  .faq-item:last-child {
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .faq-q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem 0;
+    cursor: pointer;
+    list-style: none;
+    transition: color 200ms ease;
+  }
+  .faq-q::-webkit-details-marker {
+    display: none;
+  }
+  .faq-q:hover :first-child {
+    color: var(--color-accent-text);
+  }
+
+  .faq-icon {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--color-accent-text);
+    transition: transform 250ms ease;
+  }
+  .faq-item[open] .faq-icon {
+    transform: rotate(45deg);
+  }
+
+  /* Smooth height reveal via the grid-rows 0fr→1fr trick (no JS). */
+  .faq-answer-wrap {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 300ms ease;
+  }
+  .faq-item[open] .faq-answer-wrap {
+    grid-template-rows: 1fr;
+  }
+  .faq-answer {
+    overflow: hidden;
+    min-height: 0;
+    padding-bottom: 1.25rem;
+  }
+</style>

@@ -1,0 +1,145 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import ProjectCard from './ProjectCard.astro';
+import projects from '../content/projects.json';
+
+const GITHUB_URL = 'https://github.com/tngochai021995';
+// Each row repeats the full set twice so the translateX(-50%) loop is seamless.
+const loop = [...projects, ...projects];
+---
+
+<section id="work" aria-labelledby="work-heading" class="py-16">
+  <div class="mx-auto max-w-content px-4 sm:px-8">
+    <SectionHeading
+      id="work-heading"
+      eyebrow="SELECTED WORK"
+      title="Things I've built"
+      lead="Eight products I shipped or rebuilt. Some solo, some leading a team of four to ten."
+    />
+  </div>
+
+  <!-- Full-bleed marquee: two rows scrolling in opposite directions. -->
+  <div class="work-marquee mt-12">
+    <div class="work-row work-row-1">
+      <div class="work-track">
+        {
+          loop.map((project, i) => (
+            <div class="work-cell" aria-hidden={i >= projects.length ? 'true' : undefined}>
+              <ProjectCard
+                title={project.title}
+                summary={project.summary}
+                problem={project.problem}
+                approach={project.approach}
+                result={project.result}
+                stack={project.stack}
+                liveUrl={project.liveUrl}
+                repoUrl={project.repoUrl}
+              />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="work-row work-row-2" aria-hidden="true">
+      <div class="work-track">
+        {
+          loop.map((project) => (
+            <div class="work-cell">
+              <ProjectCard
+                title={project.title}
+                summary={project.summary}
+                problem={project.problem}
+                approach={project.approach}
+                result={project.result}
+                stack={project.stack}
+                liveUrl={project.liveUrl}
+                repoUrl={project.repoUrl}
+              />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="mx-auto max-w-content px-4 sm:px-8 mt-10 flex justify-center">
+    <a href={GITHUB_URL} class="work-cta text-accent text-body-sm font-medium inline-flex items-center gap-1 py-3">
+      View all on GitHub <span class="work-cta-arrow" aria-hidden="true">→</span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .work-marquee {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    overflow: hidden;
+  }
+  .work-row {
+    overflow: hidden;
+  }
+  .work-track {
+    display: flex;
+    width: max-content;
+    /* align-items: stretch (default) → all cards in a row share a height */
+  }
+  .work-cell {
+    flex: none;
+    width: clamp(260px, 80vw, 500px);
+    margin-right: 1.5rem; /* the gap lives on the cell so -50% loops cleanly */
+  }
+  .work-cell > :global(.project-card) {
+    height: 100%;
+  }
+
+  .work-row-1 .work-track {
+    animation: work-marquee-right 70s linear infinite;
+  }
+  .work-row-2 .work-track {
+    animation: work-marquee-left 70s linear infinite;
+  }
+  .work-row:hover .work-track {
+    animation-play-state: paused;
+  }
+
+  /* moves content right-to-left */
+  @keyframes work-marquee-left {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  /* moves content left-to-right */
+  @keyframes work-marquee-right {
+    from {
+      transform: translateX(-50%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  .work-cta:hover {
+    text-decoration: underline;
+  }
+  .work-cta-arrow {
+    transition: transform 200ms ease;
+  }
+  .work-cta:hover .work-cta-arrow {
+    transform: translateX(4px);
+  }
+
+  /* Reduced motion: stop the scroll, let the user swipe through instead. */
+  @media (prefers-reduced-motion: reduce) {
+    .work-track {
+      animation: none;
+    }
+    .work-row {
+      overflow-x: auto;
+    }
+  }
+</style>

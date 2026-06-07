@@ -1,0 +1,368 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   global.css — Tran Ngoc Hai landing page
+   Tailwind v4 + JS token config, semantic theme tokens, base reset,
+   semantic utility classes.
+   ────────────────────────────────────────────────────────────────────────── */
+
+@import 'tailwindcss';
+
+/* Bridge to the typed primitive scales (colors / spacing / radius / type). */
+@config '../../tailwind.config.ts';
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Semantic theme tokens
+   Dark is the default brand statement (:root). Light is opt-in via the toggle,
+   which sets [data-theme="light"] on <html>. Each value is annotated with the
+   primitive shade it maps to. Accent shades are chosen for WCAG AA:
+     • accent-solid  = button fill (white text → AA on #2563eb)
+     • accent-text   = link/text accent (AA on the active canvas)
+   ────────────────────────────────────────────────────────────────────────── */
+:root {
+  color-scheme: dark;
+
+  /* surfaces */
+  --color-bg-canvas: #020617; /* gray-950 */
+  --color-bg-surface: #0f172a; /* gray-900 */
+  --color-bg-elevated: #1e293b; /* gray-800 */
+  --color-bg-muted: #1e293b; /* gray-800 */
+
+  /* text */
+  --color-text-primary: #f8fafc; /* gray-50 */
+  --color-text-secondary: #94a3b8; /* gray-400 */
+  --color-text-tertiary: #64748b; /* gray-500 */
+  --color-text-on-accent: #ffffff;
+
+  /* borders */
+  --color-border-subtle: #1e293b; /* gray-800 */
+  --color-border-default: #334155; /* gray-700 */
+
+  /* accent */
+  --color-accent-default: #3b82f6; /* accent-500 — brand: rings, borders, decor */
+  --color-accent-hover: #1d4ed8; /* accent-700 — solid/button interactive hover (AA w/ white text) */
+  --color-accent-solid: #2563eb; /* accent-600 — button fill, AA w/ white text */
+  --color-accent-text: #60a5fa; /* accent-400 — link/text accent on dark canvas */
+  --color-accent-muted: #172554; /* accent-950 — subtle accent surface */
+
+  /* status (single semantic exception to the accent + grays palette) */
+  --color-status-online: #10b981; /* emerald-500 — "available" indicator */
+
+  /* font stacks (webfonts loaded in BaseLayout) */
+  --font-display: 'Space Grotesk Variable', 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Inter Variable', 'Inter', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+
+  /* surfaces */
+  --color-bg-canvas: #f8fafc; /* gray-50 */
+  --color-bg-surface: #ffffff;
+  --color-bg-elevated: #ffffff;
+  --color-bg-muted: #f1f5f9; /* gray-100 */
+
+  /* text */
+  --color-text-primary: #0f172a; /* gray-900 */
+  --color-text-secondary: #475569; /* gray-600 */
+  --color-text-tertiary: #64748b; /* gray-500 */
+  --color-text-on-accent: #ffffff;
+
+  /* borders */
+  --color-border-subtle: #e2e8f0; /* gray-200 */
+  --color-border-default: #cbd5e1; /* gray-300 */
+
+  /* accent */
+  --color-accent-default: #3b82f6; /* accent-500 */
+  --color-accent-hover: #1d4ed8; /* accent-700 — interactive hover (light) */
+  --color-accent-solid: #2563eb; /* accent-600 — button fill, AA w/ white text */
+  --color-accent-text: #2563eb; /* accent-600 — link/text accent on light canvas (AA) */
+  --color-accent-muted: #dbeafe; /* accent-100 — subtle accent surface */
+
+  /* status */
+  --color-status-online: #059669; /* emerald-600 — "available" indicator (light) */
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Base / reset
+   ────────────────────────────────────────────────────────────────────────── */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    scroll-padding-top: 4rem; /* clear the 64px sticky header on anchor jumps */
+  }
+
+  body {
+    min-height: 100dvh;
+    background-color: var(--color-bg-canvas);
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+
+  code,
+  kbd,
+  pre,
+  samp {
+    font-family: var(--font-mono);
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--color-accent-default);
+    outline-offset: 2px;
+  }
+
+  /* Smooth in-page scrolling — only when motion is welcome. */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  /* Honor the OS reduced-motion setting: kill transitions/animations. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Scroll reveal (progressive enhancement)
+   The `.reveal-on-scroll` flag is added to <html> before first paint ONLY when
+   motion is welcome AND IntersectionObserver is supported (see BaseLayout). So:
+     • JS off / unsupported  → flag absent → sections never hidden (visible).
+     • prefers-reduced-motion → flag absent → sections visible, no motion.
+   A small observer adds `.is-revealed` to each section as it scrolls into view.
+   #hero is excluded — it has its own load cascade.
+   ────────────────────────────────────────────────────────────────────────── */
+.reveal-on-scroll main > section:not(#hero) {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 750ms ease,
+    transform 750ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+/* Must repeat :not(#hero) so this matches the hide rule's specificity
+   (the #hero in :not() raises it to id-level) and wins by source order. */
+.reveal-on-scroll main > section:not(#hero).is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* Stagger: children of a [data-stagger] container cascade in once their section
+   is revealed — the heading fades first, then the cards one after another. */
+.reveal-on-scroll [data-stagger] > * {
+  opacity: 0;
+  transform: translateY(20px);
+  filter: blur(4px);
+  transition:
+    opacity 650ms ease,
+    transform 650ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    filter 650ms ease;
+}
+.reveal-on-scroll section.is-revealed [data-stagger] > * {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+}
+.reveal-on-scroll [data-stagger] > *:nth-child(2) {
+  transition-delay: 60ms;
+}
+.reveal-on-scroll [data-stagger] > *:nth-child(3) {
+  transition-delay: 120ms;
+}
+.reveal-on-scroll [data-stagger] > *:nth-child(4) {
+  transition-delay: 180ms;
+}
+.reveal-on-scroll [data-stagger] > *:nth-child(5) {
+  transition-delay: 240ms;
+}
+.reveal-on-scroll [data-stagger] > *:nth-child(6) {
+  transition-delay: 300ms;
+}
+.reveal-on-scroll [data-stagger] > *:nth-child(7) {
+  transition-delay: 360ms;
+}
+.reveal-on-scroll [data-stagger] > *:nth-child(8) {
+  transition-delay: 420ms;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Per-section entrances (must live here, not in scoped <style>: the
+   `.reveal-on-scroll` flag sits on <html>, which has no component scope id).
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* Skills — tags pop in one after another (delay set per-tag inline). */
+.reveal-on-scroll #skills:not(.is-revealed) .skill-tag {
+  opacity: 0;
+}
+.reveal-on-scroll #skills.is-revealed .skill-tag {
+  animation: skill-pop 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes skill-pop {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Services — cards scale + fade in sequence (scale is independent of the hover
+   transform, so they don't collide). */
+.reveal-on-scroll #services:not(.is-revealed) .service-card {
+  opacity: 0;
+  scale: 0.95;
+}
+.reveal-on-scroll #services.is-revealed .service-card {
+  animation: service-pop 500ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.reveal-on-scroll #services.is-revealed .service-card:nth-child(2) {
+  animation-delay: 110ms;
+}
+.reveal-on-scroll #services.is-revealed .service-card:nth-child(3) {
+  animation-delay: 220ms;
+}
+@keyframes service-pop {
+  from {
+    opacity: 0;
+    scale: 0.95;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+/* About — fact rows slide in one after another. */
+.reveal-on-scroll #about:not(.is-revealed) .fact-row {
+  opacity: 0;
+}
+.reveal-on-scroll #about.is-revealed .fact-row {
+  animation: fact-in 450ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.reveal-on-scroll #about.is-revealed .fact-row:nth-child(2) {
+  animation-delay: 90ms;
+}
+.reveal-on-scroll #about.is-revealed .fact-row:nth-child(3) {
+  animation-delay: 180ms;
+}
+.reveal-on-scroll #about.is-revealed .fact-row:nth-child(4) {
+  animation-delay: 270ms;
+}
+@keyframes fact-in {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Theme-toggle circular reveal (View Transitions API)
+   The new theme blooms from the clicked toggle as an expanding clip-path circle
+   (driven in Nav.astro). Disable the default cross-fade so only our circle
+   animates. Unsupported browsers / reduced-motion fall back to an instant swap.
+   ────────────────────────────────────────────────────────────────────────── */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Scroll progress bar — a thin accent line at the very top, scaled by scroll
+   position (driven in BaseLayout). Sits above the sticky header.
+   ────────────────────────────────────────────────────────────────────────── */
+.scroll-progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  background-color: var(--color-accent-default);
+  z-index: 60;
+  pointer-events: none;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Semantic utilities (theme-aware) — v4 @utility so variants work
+   (e.g. hover:bg-accent, md:text-secondary).
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* backgrounds */
+@utility bg-canvas {
+  background-color: var(--color-bg-canvas);
+}
+@utility bg-surface {
+  background-color: var(--color-bg-surface);
+}
+@utility bg-elevated {
+  background-color: var(--color-bg-elevated);
+}
+@utility bg-muted {
+  background-color: var(--color-bg-muted);
+}
+@utility bg-accent {
+  background-color: var(--color-accent-solid);
+}
+@utility bg-accent-muted {
+  background-color: var(--color-accent-muted);
+}
+
+/* text */
+@utility text-primary {
+  color: var(--color-text-primary);
+}
+@utility text-secondary {
+  color: var(--color-text-secondary);
+}
+@utility text-tertiary {
+  color: var(--color-text-tertiary);
+}
+@utility text-on-accent {
+  color: var(--color-text-on-accent);
+}
+@utility text-accent {
+  color: var(--color-accent-text);
+}
+
+/* borders */
+@utility border-subtle {
+  border-color: var(--color-border-subtle);
+}
+@utility border-default {
+  border-color: var(--color-border-default);
+}
+@utility border-accent {
+  border-color: var(--color-accent-default);
+}

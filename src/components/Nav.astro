@@ -1,0 +1,422 @@
+---
+import Button from './Button.astro';
+
+const NAME = 'Tran Ngoc Hai';
+const RESUME_URL = '/resume.html';
+const links = [
+  { label: 'Work', href: '#work' },
+  { label: 'About', href: '#about' },
+  { label: 'Contact', href: '#contact' },
+];
+---
+
+<header data-site-header class="site-header sticky top-0 z-50 h-16">
+  <div class="mx-auto max-w-content h-full px-4 sm:px-8 flex items-center justify-between">
+    <a href="/" class="brand-link text-primary" aria-label={`${NAME} — home`}>
+      <span class="brand-badge" aria-hidden="true">
+        <svg viewBox="0 8 44 48" xmlns="http://www.w3.org/2000/svg" focusable="false">
+          <defs>
+            <linearGradient id="hai-g" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#2563eb" /><stop offset="1" stop-color="#06b6d4" />
+            </linearGradient>
+          </defs>
+          <rect x="2" y="14" width="40" height="36" rx="9" fill="url(#hai-g)" />
+          <path
+            d="M14 27 L22 32 L14 37"
+            fill="none"
+            stroke="#ffffff"
+            stroke-width="2.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <rect x="26" y="36" width="9" height="2.6" rx="1.3" fill="#ffffff" />
+        </svg>
+      </span>
+      <span class="brand-text font-mono" aria-hidden="true">
+        <span class="brand-type" data-brand-type>Hai Tran</span><span class="brand-caret"></span>
+      </span>
+    </a>
+
+    <!-- Desktop -->
+    <div class="hidden md:flex items-center gap-6">
+      {
+        links.map((link) => (
+          <a href={link.href} class="nav-link text-body-sm text-secondary transition-colors">
+            {link.label}
+          </a>
+        ))
+      }
+
+      <button
+        type="button"
+        data-theme-toggle
+        class="icon-btn grid place-items-center"
+        aria-label="Toggle color theme"
+        title="Toggle color theme"
+      >
+        <svg class="theme-icon-sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+          <path
+            fill="currentColor"
+            d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0-13a1 1 0 0 1 1 1V6a1 1 0 1 1-2 0V5a1 1 0 0 1 1-1Zm0 14a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1ZM4 12a1 1 0 0 1-1 1H2a1 1 0 1 1 0-2h1a1 1 0 0 1 1 1Zm18 0a1 1 0 0 1-1 1h-1a1 1 0 1 1 0-2h1a1 1 0 0 1 1 1ZM5.64 5.64a1 1 0 0 1 1.42 0l.7.7A1 1 0 1 1 6.34 7.76l-.7-.7a1 1 0 0 1 0-1.42Zm11.3 11.3a1 1 0 0 1 1.42 0l.7.7a1 1 0 0 1-1.42 1.42l-.7-.7a1 1 0 0 1 0-1.42Zm1.42-11.3a1 1 0 0 1 0 1.42l-.7.7a1 1 0 1 1-1.42-1.42l.7-.7a1 1 0 0 1 1.42 0ZM7.06 16.94a1 1 0 0 1 0 1.42l-.7.7a1 1 0 0 1-1.42-1.42l.7-.7a1 1 0 0 1 1.42 0Z"
+          ></path>
+        </svg>
+        <svg class="theme-icon-moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+          <path fill="currentColor" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path>
+        </svg>
+      </button>
+
+      <Button href={RESUME_URL} variant="ghost" size="sm" target="_blank">
+        Resume <span aria-hidden="true">↗</span>
+      </Button>
+    </div>
+
+    <!-- Mobile: hamburger -->
+    <button
+      type="button"
+      data-menu-open
+      class="icon-btn grid place-items-center md:hidden"
+      aria-label="Open menu"
+      aria-controls="mobile-menu"
+      aria-expanded="false"
+    >
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+        <path
+          d="M3 6h18M3 12h18M3 18h18"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        ></path>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile fullscreen menu (native dialog; CSS handles the animation) -->
+<dialog id="mobile-menu" class="mobile-menu" aria-label="Menu">
+  <div class="flex flex-col h-full">
+    <div class="flex items-center justify-between h-16 px-4">
+      <span class="font-display font-medium text-primary text-body">{NAME}</span>
+      <button type="button" data-menu-close class="icon-btn grid place-items-center" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+          <path
+            d="M6 6l12 12M18 6L6 18"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <nav class="flex flex-col gap-6 px-4 mt-8" aria-label="Mobile">
+      {
+        links.map((link) => (
+          <a href={link.href} class="nav-link text-h2 font-display text-primary py-2">
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-6 px-4 mt-12">
+      <button type="button" data-theme-toggle class="icon-btn grid place-items-center" aria-label="Toggle color theme">
+        <svg class="theme-icon-sun" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+          <path
+            fill="currentColor"
+            d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0-13a1 1 0 0 1 1 1V6a1 1 0 1 1-2 0V5a1 1 0 0 1 1-1Zm0 14a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1ZM4 12a1 1 0 0 1-1 1H2a1 1 0 1 1 0-2h1a1 1 0 0 1 1 1Zm18 0a1 1 0 0 1-1 1h-1a1 1 0 1 1 0-2h1a1 1 0 0 1 1 1ZM5.64 5.64a1 1 0 0 1 1.42 0l.7.7A1 1 0 1 1 6.34 7.76l-.7-.7a1 1 0 0 1 0-1.42Zm11.3 11.3a1 1 0 0 1 1.42 0l.7.7a1 1 0 0 1-1.42 1.42l-.7-.7a1 1 0 0 1 0-1.42Zm1.42-11.3a1 1 0 0 1 0 1.42l-.7.7a1 1 0 1 1-1.42-1.42l.7-.7a1 1 0 0 1 1.42 0ZM7.06 16.94a1 1 0 0 1 0 1.42l-.7.7a1 1 0 0 1-1.42-1.42l.7-.7a1 1 0 0 1 1.42 0Z"
+          ></path>
+        </svg>
+        <svg class="theme-icon-moon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+          <path fill="currentColor" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path>
+        </svg>
+      </button>
+
+      <Button href={RESUME_URL} variant="ghost" size="sm" target="_blank">
+        Resume <span aria-hidden="true">↗</span>
+      </Button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const root = document.documentElement;
+  const meta = document.getElementById('theme-color-meta');
+
+  const applyTheme = (next: string) => {
+    if (next === 'light') root.setAttribute('data-theme', 'light');
+    else root.removeAttribute('data-theme');
+    if (meta) meta.setAttribute('content', next === 'light' ? '#f8fafc' : '#020617');
+    try {
+      localStorage.setItem('theme', next);
+    } catch (_) {
+      /* ignore persistence failures */
+    }
+  };
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Theme toggle (desktop + mobile share the [data-theme-toggle] hook).
+  // Where the View Transitions API is available and motion is welcome, the new
+  // theme blooms from the clicked button as an expanding circle; otherwise the
+  // theme swaps instantly.
+  document.querySelectorAll('[data-theme-toggle]').forEach((btn) => {
+    btn.addEventListener('click', (event) => {
+      const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      const startViewTransition = (document as any).startViewTransition?.bind(document);
+
+      if (reduceMotion || !startViewTransition) {
+        applyTheme(next);
+        return;
+      }
+
+      // Reveal origin: the pointer, or the button's center for keyboard activation.
+      let x = (event as MouseEvent).clientX;
+      let y = (event as MouseEvent).clientY;
+      if (!x && !y) {
+        const rect = (btn as HTMLElement).getBoundingClientRect();
+        x = rect.left + rect.width / 2;
+        y = rect.top + rect.height / 2;
+      }
+      const endRadius = Math.hypot(
+        Math.max(x, window.innerWidth - x),
+        Math.max(y, window.innerHeight - y)
+      );
+
+      const transition = startViewTransition(() => applyTheme(next));
+      transition.ready
+        .then(() => {
+          root.animate(
+            {
+              clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${endRadius}px at ${x}px ${y}px)`],
+            },
+            {
+              duration: 450,
+              easing: 'ease-in-out',
+              pseudoElement: '::view-transition-new(root)',
+            }
+          );
+        })
+        .catch(() => {
+          /* transition cancelled — theme already applied */
+        });
+    });
+  });
+
+  // Mobile menu (native <dialog>).
+  const menu = document.getElementById('mobile-menu') as HTMLDialogElement | null;
+  const openBtn = document.querySelector('[data-menu-open]');
+  const setExpanded = (v: boolean) => openBtn?.setAttribute('aria-expanded', String(v));
+
+  openBtn?.addEventListener('click', () => {
+    menu?.showModal();
+    setExpanded(true);
+  });
+  menu?.querySelectorAll('[data-menu-close], a[href^="#"]').forEach((el) => {
+    el.addEventListener('click', () => menu.close());
+  });
+  // Click on the backdrop (the dialog element itself) closes it.
+  menu?.addEventListener('click', (event) => {
+    if (event.target === menu) menu.close();
+  });
+  menu?.addEventListener('close', () => setExpanded(false));
+
+  // Header gains a blur + border once the page is scrolled.
+  const header = document.querySelector('[data-site-header]');
+  const onScroll = () => header?.classList.toggle('is-scrolled', window.scrollY > 4);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Brand typewriter: cycle the logo between the name and the role, typing and
+  // deleting between them. Reduced motion keeps the static name.
+  const brandType = document.querySelector('[data-brand-type]');
+  if (brandType && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const words = ['Hai Tran', 'Software Engineer'];
+    let wi = 0;
+    let ci = words[0].length; // starts fully typed, matching the rendered text
+    let deleting = true; // hold the name first, then delete + cycle
+    const tick = () => {
+      const word = words[wi];
+      if (!deleting) {
+        ci += 1;
+        brandType.textContent = word.slice(0, ci);
+        if (ci >= word.length) {
+          deleting = true;
+          window.setTimeout(tick, 1600); // pause on the full word
+          return;
+        }
+        window.setTimeout(tick, 110);
+      } else {
+        ci -= 1;
+        brandType.textContent = word.slice(0, ci);
+        if (ci <= 0) {
+          deleting = false;
+          wi = (wi + 1) % words.length;
+          window.setTimeout(tick, 450); // pause before typing the next word
+          return;
+        }
+        window.setTimeout(tick, 55);
+      }
+    };
+    window.setTimeout(tick, 1600);
+  }
+</script>
+
+<style is:global>
+  .site-header {
+    background-color: var(--color-bg-canvas);
+    border-bottom: 1px solid transparent;
+    transition: background-color 200ms ease, border-color 200ms ease;
+  }
+  .site-header.is-scrolled {
+    background-color: color-mix(in srgb, var(--color-bg-canvas) 80%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom-color: var(--color-border-subtle);
+  }
+
+  .nav-link:hover {
+    color: var(--color-text-primary);
+  }
+
+  /* Desktop nav: an accent underline that slides in on hover. Scoped to the
+     header so the mobile menu's large links keep their plain color hover.
+     The global reduced-motion reset zeroes the transition. */
+  .site-header .nav-link {
+    position: relative;
+  }
+  .site-header .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 1px;
+    background-color: var(--color-accent-text);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 200ms ease;
+  }
+  .site-header .nav-link:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* Brand: gradient badge + a typewriter that cycles the name and role. The
+     text uses currentColor so it adapts to both themes. */
+  .brand-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: opacity 150ms ease;
+  }
+  .brand-link:hover {
+    opacity: 0.85;
+  }
+  .brand-badge {
+    display: inline-flex;
+  }
+  .brand-badge svg {
+    display: block;
+    height: 2.25rem;
+    width: auto;
+  }
+  .brand-text {
+    display: inline-flex;
+    align-items: center;
+    font-weight: 700;
+    font-size: 1.0625rem;
+    letter-spacing: -0.01em;
+    line-height: 1;
+    color: var(--color-text-primary);
+  }
+  .brand-caret {
+    display: inline-block;
+    width: 0.5rem;
+    height: 1.05em;
+    margin-left: 0.15rem;
+    border-radius: 1px;
+    background-color: var(--color-accent-text);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .brand-caret {
+      animation: brand-blink 1s steps(1) infinite;
+    }
+  }
+  @keyframes brand-blink {
+    0%,
+    50% {
+      opacity: 1;
+    }
+    50.01%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  .icon-btn {
+    width: 2.75rem;
+    height: 2.75rem;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: color 150ms ease;
+  }
+  .icon-btn:hover {
+    color: var(--color-text-primary);
+  }
+  .icon-btn > svg {
+    grid-area: 1 / 1;
+  }
+
+  /* Dark is default → show the sun (switch-to-light); light → show the moon. */
+  .theme-icon-moon {
+    display: none;
+  }
+  :root[data-theme='light'] .theme-icon-sun {
+    display: none;
+  }
+  :root[data-theme='light'] .theme-icon-moon {
+    display: block;
+  }
+
+  /* Mobile fullscreen menu */
+  .mobile-menu {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background-color: var(--color-bg-canvas);
+    color: var(--color-text-primary);
+  }
+  .mobile-menu::backdrop {
+    background-color: transparent;
+  }
+  /* Fade the dialog + backdrop in/out (native, CSS-driven). */
+  .mobile-menu,
+  .mobile-menu::backdrop {
+    opacity: 0;
+    transition:
+      opacity 200ms ease,
+      display 200ms ease allow-discrete,
+      overlay 200ms ease allow-discrete;
+  }
+  .mobile-menu[open],
+  .mobile-menu[open]::backdrop {
+    opacity: 1;
+  }
+  @starting-style {
+    .mobile-menu[open],
+    .mobile-menu[open]::backdrop {
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-menu,
+    .mobile-menu::backdrop {
+      transition: none;
+    }
+  }
+</style>

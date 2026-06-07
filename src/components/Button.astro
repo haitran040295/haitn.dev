@@ -1,0 +1,49 @@
+---
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'ghost';
+  size?: 'sm' | 'md' | 'lg';
+  type?: 'button' | 'submit';
+  target?: '_blank' | '_self';
+  class?: string;
+}
+const { href, variant = 'primary', size = 'md', type = 'button', target, class: className = '' } = Astro.props;
+
+const base = 'inline-flex items-center justify-center rounded-md font-medium transition-colors';
+const sizes = {
+  sm: 'px-4 py-2 text-body-sm',
+  md: 'px-6 py-3 text-body',
+  lg: 'px-8 py-4 text-body-lg',
+};
+const variants = {
+  primary: 'btn--primary bg-accent text-on-accent',
+  ghost: 'btn--ghost border border-default text-primary',
+};
+const cls = [base, sizes[size], variants[variant], className].filter(Boolean).join(' ');
+
+const openNew = target === '_blank' || href?.startsWith('http');
+const resolvedTarget = openNew ? '_blank' : undefined;
+const rel = openNew ? 'noopener noreferrer' : undefined;
+---
+
+{
+  href ? (
+    <a href={href} class={cls} target={resolvedTarget} rel={rel}>
+      <slot />
+    </a>
+  ) : (
+    <button type={type} class={cls}>
+      <slot />
+    </button>
+  )
+}
+
+<style>
+  .btn--primary:hover {
+    background-color: var(--color-accent-hover);
+  }
+  .btn--ghost:hover {
+    border-color: var(--color-accent-default);
+    color: var(--color-accent-text);
+  }
+</style>

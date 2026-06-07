@@ -1,0 +1,268 @@
+---
+// Hero — two-column opening: statement + magnetic CTAs on the left, a self-typing
+// terminal on the right, over the WebGL field. Entrance + pulse are CSS, gated on
+// prefers-reduced-motion; the eyebrow decodes via the scramble script below.
+import HeroBackground from './HeroBackground.astro';
+import HeroTerminal from './HeroTerminal.astro';
+
+const eyebrow = 'FULLSTACK ENGINEER · 8+ YEARS';
+const headline = 'I build web and mobile products end-to-end.';
+const headlineWords = headline.split(' ');
+const sub =
+  "Eight years in. Right now I'm building Tenantly, a multi-tenant website builder, for a US company. I reach for boring, proven tools over clever ones.";
+const status = 'Open to senior roles';
+
+const ctaBase =
+  'inline-flex items-center justify-center text-body font-medium rounded-md px-6 py-3 w-full sm:w-auto transition-all';
+---
+
+<section id="hero" aria-labelledby="hero-heading" class="hero-section relative overflow-hidden">
+  <HeroBackground />
+  <div class="relative z-10 w-full mx-auto max-w-content px-4 sm:px-8">
+    <div class="grid grid-cols-1 cards:grid-cols-5 gap-12 cards:gap-16 items-center">
+      <div class="cards:col-span-3">
+        <p
+          class="hero-badge hero-anim hero-anim-1 inline-flex items-center gap-2 rounded-full border border-subtle bg-surface px-3 py-1 font-mono text-body-sm text-secondary"
+        >
+          <span class="hero-status-dot" aria-hidden="true"></span>
+          <span>{status}</span>
+        </p>
+
+        <p
+          class="text-eyebrow font-mono uppercase text-accent mt-6 hero-anim hero-anim-2"
+          data-scramble
+        >
+          {eyebrow}
+        </p>
+
+        <h1 id="hero-heading" class="text-display font-display text-primary mt-4">
+          {
+            headlineWords.map((word, i) => (
+              <>
+                <span class="hero-word" style={`animation-delay: ${180 + i * 60}ms`}>
+                  {word}
+                </span>{' '}
+              </>
+            ))
+          }
+        </h1>
+
+        <p class="text-body-lg text-secondary max-w-measure mt-5 hero-anim hero-anim-3">{sub}</p>
+
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row hero-anim hero-anim-4">
+          <a href="#work" class={`${ctaBase} hero-cta--primary bg-accent text-on-accent`} data-magnetic>
+            See the work
+          </a>
+          <a href="#contact" class={`${ctaBase} hero-cta--ghost border border-default text-primary`} data-magnetic>
+            Get in touch
+          </a>
+        </div>
+      </div>
+
+      <div class="cards:col-span-2 hero-anim hero-anim-5">
+        <HeroTerminal />
+      </div>
+    </div>
+  </div>
+
+  <a href="#work" class="hero-scroll hidden cards:block" aria-label="Scroll to selected work">
+    <span class="hero-scroll-track"><span class="hero-scroll-thumb"></span></span>
+  </a>
+</section>
+
+<script>
+  // Decode the eyebrow on load: characters resolve from random glyphs, left to
+  // right. Skipped under reduced motion (the final text is already in the DOM).
+  const el = document.querySelector('[data-scramble]') as HTMLElement | null;
+  if (el && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const finalText = el.textContent ?? '';
+    const glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789·!<>-_/[]{}=+*^?#@%';
+    const duration = 1100;
+    let startTime = 0;
+    const step = (now: number) => {
+      if (!startTime) startTime = now;
+      const t = Math.min(1, (now - startTime) / duration);
+      const revealed = Math.floor(t * finalText.length);
+      let out = '';
+      for (let i = 0; i < finalText.length; i++) {
+        const ch = finalText[i];
+        if (i < revealed || ch === ' ') out += ch;
+        else out += glyphs[Math.floor(Math.random() * glyphs.length)];
+      }
+      el.textContent = out;
+      if (t < 1) requestAnimationFrame(step);
+      else el.textContent = finalText;
+    };
+    requestAnimationFrame(step);
+  }
+</script>
+
+<style>
+  /* Full-height hero, vertically centered, with room below the sticky header. */
+  .hero-section {
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    padding-top: 5rem;
+    padding-bottom: 4rem;
+  }
+
+  /* Slightly smaller than the global display size so the headline wraps to a
+     clean three lines beside the terminal. */
+  .hero-section h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1.05;
+  }
+
+  /* Scroll cue — a capsule with a bobbing dot, desktop only. */
+  .hero-scroll {
+    position: absolute;
+    left: 50%;
+    bottom: 1.75rem;
+    transform: translateX(-50%);
+  }
+  .hero-scroll-track {
+    display: block;
+    width: 1.6rem;
+    height: 2.6rem;
+    border: 2px solid var(--color-border-default);
+    border-radius: 9999px;
+    position: relative;
+    transition: border-color 200ms ease;
+  }
+  .hero-scroll:hover .hero-scroll-track {
+    border-color: var(--color-accent-default);
+  }
+  .hero-scroll-thumb {
+    position: absolute;
+    left: 50%;
+    top: 0.45rem;
+    width: 0.28rem;
+    height: 0.55rem;
+    border-radius: 9999px;
+    background-color: var(--color-accent-text);
+    transform: translateX(-50%);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-scroll-thumb {
+      animation: hero-scroll-bob 1.8s ease-in-out infinite;
+    }
+  }
+  @keyframes hero-scroll-bob {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, 0);
+    }
+    35% {
+      opacity: 1;
+    }
+    75% {
+      opacity: 1;
+      transform: translate(-50%, 0.85rem);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, 0.85rem);
+    }
+  }
+
+  /* Primary CTA hover — darker accent keeps white text AA-compliant. */
+  .hero-cta--primary:hover {
+    background-color: var(--color-accent-hover);
+  }
+  /* Ghost CTA hover — accent border + text, no fill. */
+  .hero-cta--ghost:hover {
+    border-color: var(--color-accent-default);
+    color: var(--color-accent-text);
+  }
+
+  /* Availability badge sits inline, not full-width. */
+  .hero-badge {
+    width: fit-content;
+  }
+
+  /* Status dot + radar pulse. The dot color is the lone non-accent hue. */
+  .hero-status-dot {
+    position: relative;
+    display: inline-block;
+    flex: none;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background-color: var(--color-status-online);
+  }
+  .hero-status-dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background-color: var(--color-status-online);
+  }
+
+  /* Keep words inline-block so they can transform; spacing comes from the
+     normal space text node rendered between them. */
+  .hero-word {
+    display: inline-block;
+  }
+
+  /* Motion only when welcome. Badge + eyebrow lead, the headline reveals word by
+     word with a blur-to-focus, then the sub/CTAs and terminal settle in. */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-anim {
+      animation: hero-fade-up 600ms ease-out both;
+    }
+    .hero-anim-2 {
+      animation-delay: 80ms;
+    }
+    .hero-anim-3 {
+      animation-delay: 520ms;
+    }
+    .hero-anim-4 {
+      animation-delay: 620ms;
+    }
+    .hero-anim-5 {
+      animation-delay: 300ms;
+    }
+    .hero-word {
+      animation: hero-word-in 650ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+    .hero-status-dot::after {
+      animation: hero-pulse 2.4s ease-out infinite;
+    }
+  }
+
+  @keyframes hero-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Headline words: rise and sharpen from a blur. */
+  @keyframes hero-word-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.5em);
+      filter: blur(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+  }
+  @keyframes hero-pulse {
+    0% {
+      opacity: 0.6;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(2.8);
+    }
+  }
+</style>

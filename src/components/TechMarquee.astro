@@ -1,0 +1,55 @@
+---
+// Infinite tech-stack ribbon. The list is duplicated so the translateX(-50%)
+// loop is seamless; it pauses on hover. Decorative (the real list lives in
+// Skills), so the track is aria-hidden. The global reduced-motion reset freezes
+// the animation into a static row.
+const stack = [
+  'TypeScript',
+  'PHP / Laravel',
+  'Vue',
+  'React / Next.js',
+  'React Native',
+  'Go',
+  'Node.js',
+  'Tailwind',
+  'Astro',
+  'Cloudflare',
+  'DigitalOcean',
+  'Supabase',
+  'AI APIs',
+];
+---
+
+<section aria-label="Technologies I work with" class="marquee-band border-y border-subtle overflow-hidden py-6">
+  <div class="marquee-track flex items-center" aria-hidden="true">
+    {[...stack, ...stack].map((tech) => <span class="marquee-item font-mono text-body-sm text-secondary">{tech}</span>)}
+  </div>
+</section>
+
+<style>
+  .marquee-track {
+    width: max-content;
+    animation: marquee 36s linear infinite;
+  }
+  .marquee-band:hover .marquee-track {
+    animation-play-state: paused;
+  }
+  .marquee-item {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+  .marquee-item::after {
+    content: '•';
+    margin: 0 1.5rem;
+    color: var(--color-accent-text);
+  }
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+</style>

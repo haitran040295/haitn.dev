@@ -1,0 +1,61 @@
+---
+import SectionHeading from './SectionHeading.astro';
+
+// DRAFT copy — derived from the design brief's "About" angle + the real project
+// history. Confirm or replace (the prose and the Languages line especially).
+const facts = [
+  { label: 'Based in', value: 'Vietnam' },
+  { label: 'Working with', value: 'Web & mobile, backend to frontend' },
+  { label: 'Open to', value: 'Senior fullstack roles, contract or full-time' },
+  { label: 'Languages', value: 'Vietnamese (native), English (fluent)' },
+];
+---
+
+<section id="about" aria-labelledby="about-heading" class="py-16">
+  <div class="mx-auto max-w-narrow px-4 sm:px-8">
+    <SectionHeading
+      id="about-heading"
+      eyebrow="ABOUT"
+      title="How I work"
+    />
+
+    <div class="mt-12 grid grid-cols-1 cards:grid-cols-5 gap-12 items-start">
+      <div class="cards:col-span-3 flex flex-col gap-4">
+        <p class="text-body-lg text-primary">
+          I'm a Vietnamese fullstack engineer, eight years in. I work remotely for a US company,
+          building Tenantly, a multi-tenant website builder. I've shipped web and mobile apps the
+          whole time, solo and in small teams.
+        </p>
+        <p class="text-body text-secondary">
+          I'm comfortable across the whole stack, backend and frontend, and I'll work with
+          whatever a project already runs on. I pick boring tools on purpose. A framework the
+          whole team already knows beats a clever one I'd have to explain at 2am. Lately a lot of
+          the work is wiring AI APIs into products that still have to work when the API doesn't.
+        </p>
+      </div>
+
+      <dl class="cards:col-span-2 rounded-lg border border-subtle bg-surface px-6">
+        {
+          facts.map((fact, i) => (
+            <div class={`fact-row flex flex-col gap-1 py-4 ${i > 0 ? 'border-t border-subtle' : ''}`}>
+              <dt class="text-eyebrow font-mono uppercase text-secondary">{fact.label}</dt>
+              <dd class="text-body text-primary">{fact.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Row label lights up on hover (entrance lives in global.css). */
+  .fact-row dt {
+    transition: color 200ms ease;
+  }
+  @media (hover: hover) {
+    .fact-row:hover dt {
+      color: var(--color-accent-text);
+    }
+  }
+</style>

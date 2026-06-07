@@ -1,0 +1,73 @@
+---
+import Button from './Button.astro';
+
+const EMAIL = 'tngochai021995@gmail.com';
+
+const socials = [{ label: 'GitHub', href: 'https://github.com/tngochai021995' }];
+---
+
+<section id="contact" aria-labelledby="contact-heading" class="py-16">
+  <div class="mx-auto max-w-band px-4 sm:px-8 flex flex-col items-center gap-4 text-center">
+    <p class="text-eyebrow font-mono uppercase text-accent">CONTACT</p>
+
+    <h2 id="contact-heading" class="text-h1 font-display text-primary">Tell me what you're building.</h2>
+
+    <p class="text-body-lg text-secondary">
+      Best for client work, contract roles, or a question about anything I've shipped. I reply within a day.
+    </p>
+
+    <Button href={`mailto:${EMAIL}`} variant="primary" size="lg">Email me</Button>
+
+    <a href={`mailto:${EMAIL}`} class="contact-email font-mono text-body-sm text-secondary transition-colors">
+      <span>{EMAIL}</span>
+    </a>
+
+    <nav aria-label="Social profiles" class="flex gap-2 font-mono text-body-sm">
+      {
+        socials.map((social) => {
+          const isExternal = social.href.startsWith('http');
+          return (
+            <a
+              href={social.href}
+              class="contact-social inline-flex items-center px-2 py-3 text-secondary transition-colors"
+              rel={isExternal ? 'noopener noreferrer' : undefined}
+              target={isExternal ? '_blank' : undefined}
+            >
+              {social.label}
+            </a>
+          );
+        })
+      }
+    </nav>
+  </div>
+</section>
+
+<style>
+  .contact-social:hover {
+    color: var(--color-text-primary);
+  }
+  .contact-email {
+    position: relative;
+  }
+  .contact-email span {
+    position: relative;
+  }
+  .contact-email span::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 1px;
+    background-color: var(--color-accent-text);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 220ms ease;
+  }
+  .contact-email:hover {
+    color: var(--color-text-primary);
+  }
+  .contact-email:hover span::after {
+    transform: scaleX(1);
+  }
+</style>

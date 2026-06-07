@@ -1,0 +1,21 @@
+---
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+---
+
+<span class="tech-tag font-mono text-body-sm px-2 py-1 rounded-full bg-elevated text-secondary">
+  {label}
+</span>
+
+<style>
+  .tech-tag {
+    transition: color 200ms ease;
+  }
+  @media (hover: hover) {
+    .tech-tag:hover {
+      color: var(--color-accent-text);
+    }
+  }
+</style>

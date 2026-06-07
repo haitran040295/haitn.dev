@@ -1,0 +1,124 @@
+---
+import TechTag from './TechTag.astro';
+
+interface Props {
+  title: string;
+  summary: string;
+  problem: string;
+  approach: string;
+  result: string;
+  stack: string[];
+  liveUrl?: string;
+  repoUrl?: string;
+}
+const { title, summary, problem, approach, result, stack, liveUrl, repoUrl } = Astro.props;
+
+const lines = [
+  { label: 'Problem', value: problem },
+  { label: 'Approach', value: approach },
+  { label: 'Result', value: result },
+];
+---
+
+<article
+  class="project-card flex flex-col gap-4 p-6 rounded-lg bg-surface border border-subtle"
+  data-spotlight
+>
+  <div class="flex flex-col gap-2">
+    <h3 class="text-h3 font-display text-primary">{title}</h3>
+    {summary && <p class="text-body text-secondary">{summary}</p>}
+  </div>
+
+  <dl class="hidden sm:flex flex-col gap-4">
+    {
+      lines.map((line) => (
+        <div class="flex flex-col gap-1">
+          <dt class="text-eyebrow font-mono uppercase text-secondary">{line.label}</dt>
+          <dd class="text-body text-primary">{line.value}</dd>
+        </div>
+      ))
+    }
+  </dl>
+
+  {
+    stack.length > 0 && (
+      <ul class="flex flex-wrap gap-2" aria-label="Tech stack">
+        {stack.map((tech) => (
+          <li>
+            <TechTag label={tech} />
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  {
+    (liveUrl || repoUrl) && (
+      <div class="flex gap-4">
+        {liveUrl && (
+          <a
+            href={liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="project-link text-accent text-body-sm font-medium inline-flex items-center gap-1 py-3"
+            aria-label={`View ${title} live site`}
+          >
+            Live <span aria-hidden="true">↗</span>
+          </a>
+        )}
+        {repoUrl && (
+          <a
+            href={repoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="project-link text-accent text-body-sm font-medium inline-flex items-center gap-1 py-3"
+            aria-label={`View ${title} source code`}
+          >
+            Code <span aria-hidden="true">↗</span>
+          </a>
+        )}
+      </div>
+    )
+  }
+</article>
+
+<style>
+  /* Spotlight card: a cursor-tracked glow + accent border + lift on hover. The
+     --mx/--my glow position and the tilt transform are set in BaseLayout's
+     pointer handler; the global reduced-motion reset neutralizes the motion. */
+  .project-card {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    transition: border-color 200ms ease;
+  }
+
+  /* glow that follows the cursor (sits over the surface, under the content) */
+  .project-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: radial-gradient(
+      420px circle at var(--mx, 50%) var(--my, 50%),
+      color-mix(in srgb, var(--color-accent-default) 22%, transparent),
+      transparent 60%
+    );
+    opacity: 0;
+    transition: opacity 250ms ease;
+  }
+
+  @media (hover: hover) {
+    .project-card:hover {
+      border-color: var(--color-accent-default);
+    }
+    .project-card:hover::before {
+      opacity: 1;
+    }
+  }
+
+  .project-link:hover {
+    text-decoration: underline;
+  }
+</style>

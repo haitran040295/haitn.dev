@@ -1,0 +1,276 @@
+---
+// Self-hosted fonts (variable, woff2). Importing the package CSS injects the
+// @font-face rules; the ?url import gives a hashed URL we can <link rel=preload>.
+import '@fontsource-variable/inter';
+import '@fontsource-variable/space-grotesk';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import headingFontUrl from '@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2?url';
+
+import '../styles/global.css';
+import ogImageUrl from '../assets/og-image.png?url';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Absolute or root-relative image path for Open Graph / Twitter cards. */
+  image?: string;
+  /** Set true to discourage indexing (e.g. drafts). */
+  noindex?: boolean;
+  /** Person JSON-LD; rendered into <head> when provided (e.g. on the home page). */
+  person?: {
+    name: string;
+    jobTitle: string;
+    sameAs: string[];
+  };
+}
+
+const SITE_NAME = 'Tran Ngoc Hai';
+const DEFAULT_TITLE = 'Tran Ngoc Hai — Fullstack Engineer';
+const DEFAULT_DESCRIPTION = 'Tran Ngoc Hai, fullstack engineer with 8+ years.';
+
+const {
+  title,
+  description = DEFAULT_DESCRIPTION,
+  image = ogImageUrl,
+  noindex = false,
+  person,
+} = Astro.props;
+
+// Title template: page titles render as "%s · Tran Ngoc Hai"; the home page
+// (no `title` prop) uses the full default brand title.
+const resolvedTitle = title ? `${title} · ${SITE_NAME}` : DEFAULT_TITLE;
+
+// Astro.site comes from `site` in astro.config.mjs.
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL(image, Astro.site).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Primary meta -->
+    <title>{resolvedTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:title" content={resolvedTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={resolvedTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    {
+      person && (
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Person',
+            name: person.name,
+            jobTitle: person.jobTitle,
+            url: Astro.site?.href,
+            sameAs: person.sameAs,
+          })}
+        />
+      )
+    }
+
+    <!-- Theme color; kept in sync with the active theme by the bootstrap + Nav toggle -->
+    <meta name="theme-color" id="theme-color-meta" content="#020617" />
+
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Preload the primary heading font to avoid a swap on first paint -->
+    <link
+      rel="preload"
+      href={headingFontUrl}
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+
+    <!-- No-FOUC theme bootstrap (must be is:inline to run before first paint):
+         a stored choice wins, otherwise follow the OS preference. The interactive
+         toggle itself lives in Nav.astro. -->
+    <script is:inline>
+      (() => {
+        try {
+          const stored = localStorage.getItem('theme');
+          const theme =
+            stored === 'light' || stored === 'dark'
+              ? stored
+              : window.matchMedia('(prefers-color-scheme: light)').matches
+                ? 'light'
+                : 'dark';
+          if (theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+          const meta = document.getElementById('theme-color-meta');
+          if (meta) meta.setAttribute('content', theme === 'light' ? '#f8fafc' : '#020617');
+        } catch (_) {
+          /* localStorage unavailable — keep the dark default */
+        }
+      })();
+    </script>
+
+    <!-- Scroll-reveal flag (must run before first paint so sections start hidden
+         without a flash). Only enabled when motion is welcome and the browser
+         supports IntersectionObserver; otherwise sections render normally. -->
+    <script is:inline>
+      (() => {
+        try {
+          if (
+            'IntersectionObserver' in window &&
+            !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+          ) {
+            document.documentElement.classList.add('reveal-on-scroll');
+          }
+        } catch (_) {
+          /* no enhancement — sections stay visible */
+        }
+      })();
+    </script>
+  </head>
+
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <div class="scroll-progress" aria-hidden="true"></div>
+
+    <slot />
+
+    <script>
+      // Reveal each section as it enters the viewport. Pure progressive
+      // enhancement: only runs when the pre-paint flag is set (motion welcome +
+      // IntersectionObserver supported). Each section is revealed once, then
+      // unobserved. #hero is excluded — it animates on load.
+      if (document.documentElement.classList.contains('reveal-on-scroll')) {
+        const sections = document.querySelectorAll('main > section:not(#hero)');
+        const observer = new IntersectionObserver(
+          (entries, obs) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-revealed');
+                obs.unobserve(entry.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -10% 0px', threshold: 0.1 }
+        );
+        sections.forEach((section) => observer.observe(section));
+      }
+    </script>
+
+    <script>
+      // Scroll progress bar — scale the top line by how far the page is scrolled.
+      const bar = document.querySelector('.scroll-progress') as HTMLElement | null;
+      if (bar) {
+        const root = document.documentElement;
+        let ticking = false;
+        const setProgress = () => {
+          const max = root.scrollHeight - root.clientHeight;
+          bar.style.transform = `scaleX(${max > 0 ? root.scrollTop / max : 0})`;
+          ticking = false;
+        };
+        setProgress();
+        window.addEventListener(
+          'scroll',
+          () => {
+            if (!ticking) {
+              ticking = true;
+              requestAnimationFrame(setProgress);
+            }
+          },
+          { passive: true }
+        );
+        window.addEventListener('resize', setProgress, { passive: true });
+      }
+
+      // Pointer micro-interactions — only with a fine pointer and motion welcome.
+      const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (finePointer && !reduce) {
+        // 3D tilt on cards
+        document.querySelectorAll<HTMLElement>('[data-tilt]').forEach((card) => {
+          const MAX = 6;
+          card.addEventListener('pointerenter', () => {
+            card.style.transition = 'transform 0ms, border-color 200ms ease';
+          });
+          card.addEventListener('pointermove', (event) => {
+            const e = event as PointerEvent;
+            const r = card.getBoundingClientRect();
+            const px = (e.clientX - r.left) / r.width - 0.5;
+            const py = (e.clientY - r.top) / r.height - 0.5;
+            card.style.transform = `perspective(800px) rotateX(${-py * MAX}deg) rotateY(${px * MAX}deg) translateY(-4px)`;
+            // spotlight glow position (percentage within the card)
+            card.style.setProperty('--mx', `${(px + 0.5) * 100}%`);
+            card.style.setProperty('--my', `${(py + 0.5) * 100}%`);
+          });
+          card.addEventListener('pointerleave', () => {
+            card.style.transition = 'transform 350ms cubic-bezier(0.2, 0.7, 0.2, 1), border-color 200ms ease';
+            card.style.transform = '';
+          });
+        });
+
+        // Spotlight glow that follows the cursor — position only, no transform
+        // (so it never gets clipped by the marquee's overflow like a tilt would).
+        document.querySelectorAll<HTMLElement>('[data-spotlight]').forEach((card) => {
+          card.addEventListener('pointermove', (event) => {
+            const e = event as PointerEvent;
+            const r = card.getBoundingClientRect();
+            card.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
+            card.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
+          });
+        });
+
+        // Magnetic pull on tagged buttons
+        document.querySelectorAll<HTMLElement>('[data-magnetic]').forEach((btn) => {
+          const STRENGTH = 0.3;
+          btn.addEventListener('pointermove', (event) => {
+            const e = event as PointerEvent;
+            const r = btn.getBoundingClientRect();
+            const x = (e.clientX - r.left - r.width / 2) * STRENGTH;
+            const y = (e.clientY - r.top - r.height / 2) * STRENGTH;
+            btn.style.transform = `translate(${x}px, ${y}px)`;
+          });
+          btn.addEventListener('pointerleave', () => {
+            btn.style.transform = '';
+          });
+        });
+      }
+    </script>
+
+    <style>
+      .skip-link {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 100;
+        margin: 8px;
+        padding: 8px 16px;
+        border-radius: 8px;
+        background-color: var(--color-accent-solid);
+        color: var(--color-text-on-accent);
+        transform: translateY(-150%);
+        transition: transform 150ms ease;
+      }
+      .skip-link:focus {
+        transform: translateY(0);
+      }
+    </style>
+  </body>
+</html>

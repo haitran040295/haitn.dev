@@ -25,9 +25,9 @@ interface Props {
   };
 }
 
-const SITE_NAME = 'Tran Ngoc Hai';
-const DEFAULT_TITLE = 'Tran Ngoc Hai — Fullstack Engineer';
-const DEFAULT_DESCRIPTION = 'Tran Ngoc Hai, fullstack engineer with 8+ years.';
+const SITE_NAME = 'Hai Tran';
+const DEFAULT_TITLE = 'Hai Tran — Fullstack Engineer';
+const DEFAULT_DESCRIPTION = 'Hai Tran, fullstack engineer with 8+ years.';
 
 const {
   title,
@@ -37,7 +37,7 @@ const {
   person,
 } = Astro.props;
 
-// Title template: page titles render as "%s · Tran Ngoc Hai"; the home page
+// Title template: page titles render as "%s · Hai Tran"; the home page
 // (no `title` prop) uses the full default brand title.
 const resolvedTitle = title ? `${title} · ${SITE_NAME}` : DEFAULT_TITLE;
 
